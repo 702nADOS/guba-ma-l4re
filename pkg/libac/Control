@@ -1,0 +1,3 @@
+requires: crtn l4re l4re_c libedft stdlibs libkproxy
+provides: libac
+Maintainer: sebastian.bachmaier@tum.de

@@ -1,0 +1,91 @@
+
+{ "map":1,
+  "classes": 
+[
+		{	
+			"name": "class1",
+			"cpuBinding": 1,
+			"schedulerBind": 1,
+			"scheduler": "Fixed_prio",
+			"cpu": 0,
+			"priority": 6,
+			"tasks": [{"name": "rom/test_libac_csv", "alias":"TestThread1",   "scheduler": "Fixed_prio", "prio_end": 50}]
+		},{
+			"name": "class2",
+			"cpuBinding": 1,
+			"schedulerBind": 1,
+			"scheduler": "Fixed_prio",
+			"cpu": 0,
+			"priority": 7,
+			"tasks": [{"name": "rom/test_libac_csv", "alias":"TestThread2", "scheduler": "Fixed_prio", "prio_end": 85},
+				  {"name": "rom/test_libac_csv", "alias":"TestThread3", "scheduler": "Fixed_prio", "prio_end": 150}]
+		},
+		
+		{	
+		      "name": "unkritisch",
+		      "cpuBinding": 1,
+		      "schedulerBind": 1,
+		      "scheduler": "Fixed_prio",
+		      "cpu": 0,
+		      "priority": 4,
+		      "tasks": [{"name": "rom/test_Fahrassistent", "alias":"Logdatei",   "scheduler": "Fixed_prio", "prio_end": 50}]
+		},{
+		      "name": "periodisch",
+		      "cpuBinding": 1,
+		      "schedulerBind": 1,
+		      "scheduler": "Fixed_prio",
+		      "cpu": 0,
+		      "priority": 5,
+		      "tasks": [{"name": "rom/test_Fahrassistent", "alias":"Ueberpruefung",   "scheduler": "Fixed_prio", "prio_end": 100}]
+		},{
+		      "name": "kritisch",
+		      "cpuBinding": 1,
+		      "schedulerBind": 1,
+		      "scheduler": "Fixed_prio",
+		      "cpu": 0,
+		      "priority": 6,
+		      "tasks": [{"name": "rom/test_Motorregelung", "alias":"Gasregelung", "scheduler": "Fixed_prio", "prio_end": 150},
+				{"name": "rom/test_Fahrassistent", "alias":"Geschwindigkeitsregelung",   "scheduler": "Fixed_prio", "prio_end": 150}]
+		},{
+		      "name": "essentiel",
+		      "cpuBinding": 1,
+		      "schedulerBind": 1,
+		      "scheduler": "Fixed_prio",
+		      "cpu": 0,
+		      "priority": 7,
+		      "tasks": [{"name": "rom/test_Motorregelung", "alias":"Motorkuehlung",   "scheduler": "Fixed_prio", "prio_end": 245}]
+		},
+		{
+			"name": "system",
+			"map": 0,
+			"cpuBinding": 1,
+			"schedulerBind": 1,
+			"scheduler": "Fixed_prio",
+			"cpu": 0,
+			"priority": 255,
+			"tasks": [
+				{"name": "rom/ned", "alias": "NED", 	"scheduler": "Fixed_prio", "prio_end": 255},
+				{"name": "rom/moe", 			"scheduler": "Fixed_prio", "prio_end": 255},
+				{"name": "rom/test_libac_csv", 		"scheduler": "Fixed_prio", "prio_end": 255},
+				{"name": "rom/test_Motorregelung", 		"scheduler": "Fixed_prio", "prio_end": 255},
+				{"name": "rom/test_Fahrassistent", 		"scheduler": "Fixed_prio", "prio_end": 255},
+				{"name": "rom/Testserver", 		"scheduler": "Fixed_prio", "prio_end": 255},
+				{"name": "rom/hello", "alias":"HELLO TASK", "scheduler": "Fixed_prio", "prio_end": 255}
+			]
+		}
+],
+ 	"tasks" : [
+ 		{
+ 			"name": "rom/moe",
+ 			"all_rights": 1
+ 		},
+ 		{
+ 			"name": "rom/ned",
+ 			"all_rights": 1
+ 		}
+ 	]
+
+}
+
+    
+      
