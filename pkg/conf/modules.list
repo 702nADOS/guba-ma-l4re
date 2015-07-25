@@ -68,7 +68,6 @@ module io
 module ankh
 module dom0
 module hello
-module test
 module ankh.vbus
 module Aw.lua
 module dom0_server_and_client.cfg

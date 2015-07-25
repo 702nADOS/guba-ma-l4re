@@ -1,4 +1,10 @@
 #!/bin/bash
+# Shell script that facilitates running OC in qemu mode with modules preselected
+# NOTES : 
+# ./run.sh              - will start acstand module by default
+# ./run.sh <moduleName> - will start the <moduleName>
+# ./run.sh c            - will give the option to select the module
+# ./run.sh n            - will start the network version, stark thesis
 
 cd trunk/obj/l4/x86
 
@@ -7,11 +13,11 @@ MODULES_LIST=$LOCAL_PKG/conf/modules.list
 MODULE_SEARCH_PATH=$LOCAL_PKG/conf:$LOCAL_PKG/conf/network:../obj/fiasco
 E="E=acstand"
 
-if [ -n "$1" ]
-  then
-  if [ $1 == "c" ]
-  then
+if [ -n "$1" ]; then
+  if [ $1 == "c" ]; then
     E=""
+  elif [ $1 == "n" ]; then
+    ./run_nw.sh 
   else
     E="E=$1"
   fi
