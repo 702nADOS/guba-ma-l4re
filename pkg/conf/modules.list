@@ -146,7 +146,20 @@ roottask moe --init=rom/ex_thread_migrate
 module ex_thread_migrate
 module l4re
 
-
+entry dhcp
+roottask moe rom/ankh.lua
+module l4re
+module ned
+module io
+module ankh
+module dom0
+module hello
+module ankh.vbus
+module Aw.lua
+module dom0_server_and_client.cfg
+module stage2ned.cfg
+module ankh.lua
+module morpork
 
 entry lwip
 roottask moe rom/lwip.lua
@@ -223,3 +236,7 @@ module l4lx-x86.io
 module vmlinuz
 module ramdisk-x86.rd
 
+entry tumatmul
+roottask moe --init=rom/tumatmul
+module l4re
+module tumatmul
