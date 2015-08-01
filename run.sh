@@ -6,25 +6,32 @@
 # ./run.sh c            - will give the option to select the module
 # ./run.sh n            - will start the network version, stark thesis
 
+#the current working directory
+WD=`pwd`
+
 cd trunk/obj/l4/x86
 
-LOCAL_PKG=../../pkg
+LOCAL_PKG=$WD/pkg
 MODULES_LIST=$LOCAL_PKG/conf/modules.list
-MODULE_SEARCH_PATH=$LOCAL_PKG/conf:$LOCAL_PKG/conf/network:../obj/fiasco
+MODULE_SEARCH_PATH=$LOCAL_PKG/conf:$LOCAL_PKG/conf/network:$WD/trunk/obj/fiasco
 E="E=acstand"
+MAKE_CMD="qemu"
 
 if [ -n "$1" ]; then
   if [ $1 == "c" ]; then
     E=""
   elif [ $1 == "n" ]; then
     ./run_nw.sh 
+  elif [ $1 == "elfimage" ]; then
+    MAKE_CMD="elfimage"
+    E=""
   else
     E="E=$1"
   fi
 fi
 
 #run the command with the right options
-make qemu $E QEMU_OPTIONS=-nographic QEMU_OPTIONS+=-serial\ stdio QEMU_OPTIONS+="-net socket,listen=:8010 -net nic,model=ne2k_pci,macaddr=52:54:00:00:00:02" MODULES_LIST=$MODULES_LIST MODULE_SEARCH_PATH=$MODULE_SEARCH_PATH;
+make $MAKE_CMD $E QEMU_OPTIONS=-nographic MODULES_LIST=$MODULES_LIST MODULE_SEARCH_PATH=$MODULE_SEARCH_PATH;
 
 
 #if [ -z "$1" ]

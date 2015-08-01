@@ -53,16 +53,16 @@ elif [ $1 == "mod" ]; then
   cd pkg
   #stark changes
   # Mr.Stark had changes in l4sys as well, thus building dom0-main first
-  make O=../../trunk/obj/l4/x86 -C pkg/dom0-main
-  make O=../../trunk/obj/l4/x86 -C pkg/ned
+  make O=../../trunk/obj/l4/x86 -C dom0-main
+  make O=../../trunk/obj/l4/x86 -C ned
   #hauner changes
-  make O=../../trunk/obj/l4/x86 -C pkg/l4sys
-  make O=../../trunk/obj/l4/x86 -C pkg/libedft
+  make O=../../trunk/obj/l4/x86 -C l4sys
+  make O=../../trunk/obj/l4/x86 -C libedft
   #bachmeier changes
-  make O=../../trunk/obj/l4/x86 -C pkg/libkproxy
-  make O=../../trunk/obj/l4/x86 -C pkg/libac
-  make O=../../trunk/obj/l4/x86 -C pkg/moe
-  make O=../../trunk/obj/l4/x86 -C pkg/l4re_kernel
+  make O=../../trunk/obj/l4/x86 -C libkproxy
+  make O=../../trunk/obj/l4/x86 -C libac
+  make O=../../trunk/obj/l4/x86 -C moe
+  make O=../../trunk/obj/l4/x86 -C l4re_kernel
   #kundaliya changes
 
 
