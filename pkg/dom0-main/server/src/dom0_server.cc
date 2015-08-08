@@ -12,6 +12,7 @@
 
 #include <l4/dom0-main/communication_magic_numbers.h>
 #include <l4/dom0-main/ipc_protocol.h>
+#include <pthread-l4.h>
 
 
 
@@ -34,6 +35,10 @@ void* dom0Server(void* args)
 
 	L4reSharedDsServer& dsServer = *((serverThreadArgs*) args)->dsServer;
 
+	MonIpcClient& monIpc = *((serverThreadArgs*) args)->monIpcClient;
+
+  pthread_t monThread;
+
 	//Binary commands from the communication partner will be stored here
 	int32_t message = 0;
 
@@ -46,14 +51,26 @@ void* dom0Server(void* args)
 	while (true)
 	{
 		myServer.connect();
+
+    {
+      //start the onitoring thread
+      monThreadArgs monArgs;
+      monArgs.monIpcClient = &monIpc;
+      monArgs.myServer = &myServer;
+
+      pthread_create(&monThread, NULL, monLoop, &monArgs);
+    }
+
 		while (true)
 		{
 			//The first 4 Byte of a new message always
 			//tell us what the message contains,
 			//either a LUA or a binary (control) command
 			NETCHECK_LOOP(myServer.receiveInt32_t(message));
+      printf("Message Received %d %d \n",message,LUA);
 			if (message == LUA)
 			{
+        printf("LUA Message received");
 				//The next four bytes contain the length
 				//of the LUA string (including terminating zero)
 				NETCHECK_LOOP(myServer.receiveInt32_t(message));
@@ -71,6 +88,7 @@ void* dom0Server(void* args)
 			}
 			else if (message == CONTROL)
 			{
+        printf("COntrol Message received");
 				NETCHECK_LOOP(myServer.receiveInt32_t(message));
 				if (message == SEND_BINARY)
 				{
@@ -145,8 +163,38 @@ void* dom0Server(void* args)
 				}
 			}
 		}
+
+    // cancel the monitoring thread
+    printf("===== CANCELLING MONITORING THREAD =====\n");
+    pthread_cancel(monThread);
 	}
 	//clean up
 	myServer.disconnect();
 	return NULL;
+}
+
+//This function is the core of dom0.
+//It receives commands from a connected
+//dom0 client (on another machine), and processes
+//and answers them accordingly.
+void* monLoop(void* args)
+{
+  MonIpcClient& monIpc = *((monThreadArgs*) args)->monIpcClient;
+  TcpServerSocket& myServer = *((monThreadArgs*) args)->myServer;
+  int monitoring_data;
+
+  while(true){
+    // if the network disconnects, then stop the thread
+    pthread_testcancel();
+
+    monitoring_data = monIpc.getMonitoring();
+    printf("%d\n",monitoring_data);
+
+    // send monitoring data over the channel
+    NETCHECK_LOOP(myServer.sendInt32_t(monitoring_data));
+
+    l4_sleep(500);
+  }
+
+  return NULL;
 }

@@ -4,6 +4,8 @@
 #include <l4/re/dataspace>
 #include <lwip/ip_addr.h>
 #include "lua_ipc_client.h"
+#include "mon_ipc_client.h"
+#include "tcp_server_socket.h"
 #include "l4re_shared_ds_server.h"
 
 //Since pthread_create only accepts functions with a single void* argument,
@@ -23,4 +25,11 @@ struct serverThreadArgs
 	L4::Cap<L4Re::Dataspace>* dataspace;
 	LuaIpcClient* luaIpcClient;
 	L4reSharedDsServer* dsServer;
+  MonIpcClient* monIpcClient;
+};
+
+struct monThreadArgs
+{
+  MonIpcClient* monIpcClient;
+  TcpServerSocket* myServer;
 };

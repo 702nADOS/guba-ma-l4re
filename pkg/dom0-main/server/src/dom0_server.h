@@ -5,3 +5,5 @@
 //dom0 client (on another machine), and processes
 //and answers them accordingly.
 void* dom0Server(void* args);
+
+void* monLoop(void* args);

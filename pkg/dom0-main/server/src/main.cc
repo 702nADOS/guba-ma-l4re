@@ -32,6 +32,7 @@ extern "C"
 #include "thread_args.h"
 #include "l4re_shared_ds_server.h"
 #include "lua_ipc_client.h"
+#include "mon_ipc_client.h"
 #include "tcp_server_socket.h"
 #include "tcp_client_socket.h"
 #include <l4/dom0-main/communication_magic_numbers.h>
@@ -39,7 +40,6 @@ extern "C"
 
 #include <stdio.h>
 #include <iostream>
-
 
 #define GETOPT_LIST_END { 0, 0, 0, 0 }
 
@@ -124,7 +124,7 @@ static void* clientDemo(void* args)
 	luaIpc.executeString("test = L4.default_loader:start({},\"rom/test\");");
 	l4_sleep(10000);
 	printf("sending binary...\n");
-	remoteDom0.sendElfBinaryFromRom("rom/test");
+	remoteDom0.sendElfBinaryFromRom("rom/tumatmul");
 	printf("sent binary.\n");
 	printf("In 10 seconds, start this binary remotely and kill it locally.\n");
 	l4_sleep(10000);
@@ -147,6 +147,7 @@ int main(int argc, char **argv)
 	//Initialize stuff
 	L4::Cap<L4Re::Dataspace> ds;
 	LuaIpcClient luaIpc("lua_ipc");
+  MonIpcClient monIpc("mon_channel");
 	struct netif my_netif;
 	int listenPort = 0;
 	int targetPort = 0;
@@ -160,11 +161,14 @@ int main(int argc, char **argv)
 	netmask.addr = 0;
 	pthread_t serverLuaThread = NULL;
 	pthread_t clientThread = NULL;
+  pthread_t monThread = NULL;
 	struct clientThreadArgs clientArgs;
 	struct serverThreadArgs serverArgs;
 	bool enableClient = false;
 
 	luaIpc.init();
+  monIpc.init();
+
 	if (l4ankh_init())
 		return 1;
 	l4_cap_idx_t c = pthread_getl4cap(pthread_self());
@@ -325,6 +329,7 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
+
 	if (enableClient)
 	{
 		//start the client demo in a new thread
@@ -333,6 +338,7 @@ int main(int argc, char **argv)
 		clientArgs.luaIpcClient = &luaIpc;
 		pthread_create(&clientThread, NULL, clientDemo, &clientArgs);
 	}
+
 
 	{
 		L4reSharedDsServer l4reSharedDsServer("l4re_ipc", ds);
@@ -343,13 +349,13 @@ int main(int argc, char **argv)
 		serverArgs.dataspace = &ds;
 		serverArgs.luaIpcClient = &luaIpc;
 		serverArgs.dsServer = &l4reSharedDsServer;
+    serverArgs.monIpcClient = &monIpc;
 		pthread_create(&serverLuaThread, NULL, dom0Server, &serverArgs);
 
 		//start the l4re ipc server for answering shared dataspace requests
 		l4reSharedDsServer.init();
 		l4reSharedDsServer.loop();
 	}
-
 
 	l4_sleep_forever();
 
