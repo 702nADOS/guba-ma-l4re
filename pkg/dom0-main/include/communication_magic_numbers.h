@@ -5,6 +5,10 @@
 
 //client wants to send control messages
 #define CONTROL 0xC047201
+//client wants to send Task Description
+#define TASK_DESC 0xDE5
+//client wants to send Task Binary
+#define SEND_BINARIES 0xDE5F11E
 //client wants to send a LUA command
 #define LUA 0x10A
 

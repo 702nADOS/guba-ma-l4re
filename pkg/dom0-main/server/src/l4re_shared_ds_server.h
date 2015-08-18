@@ -1,6 +1,8 @@
 #pragma once
 
 #include <l4/re/util/object_registry>
+#include <map>
+#include <string>
 
 
 
@@ -14,7 +16,8 @@ private:
 	class L4reIpcServer: public L4::Server_object
 	{
 	public:
-		L4reIpcServer(L4::Cap<L4Re::Dataspace>& ds);
+		L4reIpcServer(L4::Cap<L4Re::Dataspace>& ds,
+    std::map <std::string, L4::Cap<L4Re::Dataspace> >& elfDataSpace);
 
 		int dispatch(l4_umword_t, L4::Ipc::Iostream& ios);
 
@@ -23,15 +26,18 @@ private:
 	private:
 		bool dsIsInUse;
 		L4::Cap<L4Re::Dataspace>& ds;
+    std::map <std::string, L4::Cap<L4Re::Dataspace> >& elfDataSpace;
 	};
 
 
 
 public:
+  std::map <std::string, L4::Cap<L4Re::Dataspace> > elfDataSpace;
+  L4::Cap<L4Re::Dataspace>& getDataSpaceFor(std::string);
+
 	L4reSharedDsServer(const char* capName, L4::Cap<L4Re::Dataspace>& ds);
-
+  //int addToMap(std::string name, L4::Cap<<L4Re::Dataspace> ds);
 	bool init();
-
 	void loop();
 
 	//Tell if l4re has already finished copying the contents of the shared ds.
