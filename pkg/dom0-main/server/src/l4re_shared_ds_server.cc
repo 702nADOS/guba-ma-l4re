@@ -2,6 +2,7 @@
 
 #include <l4/dom0-main/communication_magic_numbers.h>
 #include <l4/dom0-main/ipc_protocol.h>
+#include "jsmn.h"
 
 #include <stdio.h>
 
@@ -35,6 +36,10 @@ bool L4reSharedDsServer::dsInUse()
   return ipcServer.dsInUse();
 }
 
+void L4reSharedDsServer::parseTaskDescriptions(char *taskDescriptions){
+
+}
+
 L4::Cap<L4Re::Dataspace>& L4reSharedDsServer::getDataSpaceFor(std::string binary_name){
 
   elfDataSpace.insert(std::make_pair(binary_name,
@@ -60,20 +65,35 @@ int L4reSharedDsServer::L4reIpcServer::dispatch(l4_umword_t,
 {
   l4_msgtag_t t;
   ios >> t;
+  char binary_name[8];
   // We're only talking the l4reIpc protocol
   if (t.label() != Protocol::l4reIpc)
     return -L4_EBADPROTO;
 
   L4::Opcode opcode;
   ios >> opcode;
+  unsigned long int size = sizeof(binary_name);
   switch (opcode)
   {
     case Opcode::getSharedDataspace:
-      //Mark the ds used until l4re has copied its content
-      dsIsInUse=true;
-      //Write the dataspace capability into the stream. The kernel will map it to the other task.
-      ios << elfDataSpace.find("avinash1")->second;
-      //ios << ds;
+      //ios >> binary_name;
+      ios >> L4::Ipc::buf_cp_in<char>(binary_name, size);
+      if (strcmp(binary_name,"network") == 0)
+      {
+        printf("Starting Network \n");
+        //Mark the ds used until l4re has copied its content
+        dsIsInUse=true;
+        ios << ds;
+      } else {
+        printf("Startinng %s \n",binary_name);
+        //Write the dataspace capability into the stream. The kernel will map it to the other task.
+        //XXX: if binary_name is not valid, EXIT or send dummy
+        //ios << elfDataSpace.find(binary_name)->second;
+        if(elfDataSpace.find(binary_name) != elfDataSpace.end())
+          ios << elfDataSpace.find(binary_name)->second;
+        else
+          return -L4_ENOSYS;
+      }
       return L4_EOK;
     case Opcode::dataspaceCopyFinished:
       //The l4re thread has finished copying the contents of the shared dataspaces;

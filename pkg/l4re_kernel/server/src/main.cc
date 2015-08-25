@@ -28,6 +28,8 @@
 #include <cstdlib>
 #include <cstring>
 
+#include <string>
+
 #include <stdio.h>
 #include <l4/cxx/ipc_stream>
 #include <l4/util/util.h>
@@ -278,20 +280,45 @@ int main(int argc, char const *argv[])
   
 
   boot.printf("load binary '%s'\n", Global::l4re_aux->binary);
-  
+  printf("load binary '%s'\n", Global::l4re_aux->binary);
+
+  int binary_name_length = strlen(Global::l4re_aux->binary);
+  bool isNetwork = false;
+  char binary_name[9];
+
+  // if the binary name is network, then its a network binary
   if (strcmp(Global::l4re_aux->binary, "network") == 0)
   {
+    isNetwork = true;
+    strcpy(binary_name,"network");
+  }
+
+  // if the binary name ends with :n , then its also a network binary
+  if(Global::l4re_aux->binary[binary_name_length-1] == 'n' &&
+     Global::l4re_aux->binary[binary_name_length-2] == ':')
+  {
+    isNetwork = true;
+    int i;
+    for(i=0;i<binary_name_length-2; i++){
+        if(i>8) break;
+      binary_name[i] = Global::l4re_aux->binary[i];
+    }
+    binary_name[i] = '\0';
+  }
+
+  if (isNetwork)
+  {
     printf("Loading network-received binary!\n");
-    
+
     L4::Cap<void> server = L4Re::Env::env()->get_cap<void>("l4re_ipc");
-    
+
     if (!server.is_valid())
     {
       printf("Could not get server capability!\n");
       return 1;
     }
     printf("Got IPC gate.\n");
-    
+
     L4::Cap<L4Re::Dataspace> ds = L4Re::Util::cap_alloc.alloc<
     L4Re::Dataspace>();
     if (!ds.is_valid())
@@ -299,7 +326,7 @@ int main(int argc, char const *argv[])
       printf("Could not get capability slot!\n");
       return 1;
     }
-    
+
     L4::Ipc::Iostream s(l4_utcb());
     //We want to get the shared dataspace ->
     //Write the corresponding opcode and
@@ -308,6 +335,7 @@ int main(int argc, char const *argv[])
     //stream and answer. The kernel detects this
     //and maps the capability of the shared dataspace into ds.
     s << L4::Opcode(Opcode::getSharedDataspace);
+    s << binary_name;
     s << L4::Ipc::Small_buf(ds);
     int r = l4_error(s.call(server.cap(), Protocol::l4reIpc));
     if (r)
@@ -316,21 +344,21 @@ int main(int argc, char const *argv[])
       return r; // failure
     }
     printf("Got shared dataspace with target binary.\n");
-    
+
     //Since dom0 might want to reuse ds for other binaries,
     //we copy its contents into file and then use launch file.
     file=L4Re_app_model::alloc_ds(ds->size());
-    
+
     L4Re_app_model::copy_ds(file,0,ds,0,ds->size());
-    
+
     if(r)
     {
       printf("error on copying ds: %s\n",l4sys_errtostr(r));
       return -1;
     }
-    
+
     printf("Dataspace copied.\n");
-    
+
     //Notify dom0 that we finished copying.
     s.reset();
     s << L4::Opcode(Opcode::dataspaceCopyFinished);
@@ -343,14 +371,14 @@ int main(int argc, char const *argv[])
     file.operator =(file);
     printf("Sent OK message to dom0.\n");
   }
-  
+
   else
   {
     printf("Loading binary from ROM.\n");
     file = L4Re_app_model::open_file(Global::l4re_aux->binary);
   }
-  
-  
+
+
   loader.start(file, Global::local_rm, Global::l4re_aux);
 
   //printf("Running %s\n",Global::l4re_aux->binary);
@@ -360,7 +388,7 @@ int main(int argc, char const *argv[])
   //env->scheduler()->run_thread(env->main_thread(), l4_get_scheduler(Global::l4re_aux->binary));
   boot.printf("Start server loop\n");
   server.loop(Dispatcher());
-  
+
   } catch (L4::Runtime_error const &e)
     {
       Err(Err::Fatal).printf("Exception %s: '%s'\n", e.str(), e.extra_str());

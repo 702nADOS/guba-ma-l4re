@@ -3,6 +3,8 @@
 #include <l4/re/util/object_registry>
 #include <map>
 #include <string>
+#include "task_description.h"
+#include <string.h>
 
 
 
@@ -43,9 +45,12 @@ public:
 	//Tell if l4re has already finished copying the contents of the shared ds.
 	//If true is returned, it can be safely reused.
 	bool dsInUse();
+  void parseTaskDescriptions(char*);
 
 private:
 	const char* capName;
 	L4Re::Util::Registry_server<> registryServer;
 	L4reIpcServer ipcServer;
+
+  taskDescription tasks[];
 };

@@ -14,8 +14,6 @@
 #include <l4/dom0-main/ipc_protocol.h>
 #include <pthread-l4.h>
 
-#include "jsmn.h"
-
 #include <map>
 #include <string>
 
@@ -211,6 +209,7 @@ void* dom0Server(void* args)
         printf("%d binary to be sent \n", number_of_binary);
 
         for (int i = 0; i < number_of_binary; i++) {
+          printf("waiting for Binary :%d \n",i);
           char name[9];
           int binary_size;
 
@@ -253,6 +252,8 @@ void* dom0Server(void* args)
 
           printf("Got binary %s of size %d \n",name,binary_size);
           L4Re::Env::env()->rm()->detach(space, &dss);
+
+          NETCHECK_LOOP(myServer.sendInt32_t(GO_SEND));
           //elfDataSpace[binary_name] = ds;
           //dsServer.elfDataSpace[binary_name] = ds;
 
