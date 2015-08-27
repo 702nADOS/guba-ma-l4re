@@ -5,6 +5,15 @@
 #include "jsmn.h"
 
 #include <stdio.h>
+#include <string.h>
+#include <iostream>
+#include <vector>
+
+/* json helper functions */
+static int jsoneq(const char *json, jsmntok_t *tok, const char *s);
+static char* jsongetstring(const char *json, jsmntok_t *tok);
+static int jsonreadstring(const char *json, jsmntok_t *tok, int* pos, const char *s, char** t);
+static int jsonreadint(const char *json, jsmntok_t *tok, int* pos, const char *s, int* t);
 
 L4reSharedDsServer::L4reSharedDsServer(const char* capName,
     L4::Cap<L4Re::Dataspace>& ds) :
@@ -36,7 +45,52 @@ bool L4reSharedDsServer::dsInUse()
   return ipcServer.dsInUse();
 }
 
-void L4reSharedDsServer::parseTaskDescriptions(char *taskDescriptions){
+void L4reSharedDsServer::parseTaskDescriptions(char *json){
+  printf ("parsing the json file");
+  jsmn_parser p;
+  jsmntok_t t[128];
+
+  int res, pos;
+
+  jsmn_init(&p);
+  res = jsmn_parse(&p, json, strlen(json), t, sizeof(t)/sizeof(t[0]));
+
+  if(res < 0){
+    std::cout << "Failed to parse";
+    return;
+  }
+
+  if(res<1 || t[0].type !=JSMN_ARRAY){
+    std::cout << "Array expected";
+    return;
+  }
+
+  pos = 1;
+
+  for(int j=0; j < t[0].size; j++){
+    if(t[pos].type != JSMN_OBJECT){
+      pos++; j--; continue;
+    }
+
+    pos++;
+    taskDescription* td = new taskDescription();
+    jsonreadint(json, t, &pos, "id", &td->id);
+    jsonreadint(json, t, &pos, "executiontime", &td->executionTime);
+    jsonreadint(json, t, &pos, "criticaltime", &td->criticalTime);
+    jsonreadint(json, t, &pos, "priority", &td->priority);
+    jsonreadint(json, t, &pos, "period", &td->period);
+    jsonreadint(json, t, &pos, "offset", &td->offset);
+    jsonreadint(json, t, &pos, "matrixSize", &td->matrixSize);
+    jsonreadstring(json, t, &pos, "pkg", &td->binaryName);
+    tasks.push_back(td);
+  }
+
+  for (std::vector<taskDescription*>::iterator it = tasks.begin(); it != tasks.end(); ++it) {
+    std::cout << (*it)->id;
+    std::cout << (*it)->matrixSize;
+    std::cout << (*it)->binaryName;
+  }
+
 
 }
 
@@ -109,4 +163,52 @@ int L4reSharedDsServer::L4reIpcServer::dispatch(l4_umword_t,
 bool L4reSharedDsServer::L4reIpcServer::dsInUse()
 {
   return dsIsInUse;
+}
+
+
+
+/* helper functions to read the json file
+ * taken from libac */
+
+static int jsoneq(const char *json, jsmntok_t *tok, const char *s) {
+  if (tok->type == JSMN_STRING && (int) strlen(s) == tok->end - tok->start &&
+      strncmp(json + tok->start, s, tok->end - tok->start) == 0) {
+    return 0;
+  }
+  return -1;
+}
+
+static char* jsongetstring(const char *json, jsmntok_t *tok) {
+  char* c = (char*) malloc(sizeof(char) * (tok->end - tok->start + 1));
+  memcpy(c, json + tok->start, tok->end - tok->start);
+  c[tok->end - tok->start] = 0x00;
+  return c;
+}
+
+static int jsonreadstring(const char *json, jsmntok_t *tok, int* pos, const char *s, char** t) {
+  if (jsoneq(json, tok + (*pos), s) != 0)
+  {
+    printf("\"%s\" != \"%s\"\n", jsongetstring(json, tok + (*pos)), s);
+    printf("JSON ERROR!\n");
+    return -1;
+  }
+  (*pos)++;
+  *t =  jsongetstring(json, tok + (*pos));
+  (*pos)++;
+  return 0;
+}
+
+static int jsonreadint(const char *json, jsmntok_t *tok, int* pos, const char *s, int* t) {
+  if (jsoneq(json, tok + (*pos), s) != 0)
+  {
+    printf("\"%s\" != \"%s\"\n", jsongetstring(json, tok + (*pos)), s);
+    printf("JSON ERROR!\n");
+    return -1;
+  }
+  (*pos)++;
+  char* string_buf = jsongetstring(json, tok + (*pos));
+  *t =  strtoul(string_buf, NULL, 0);
+  free(string_buf);
+  (*pos)++;
+  return 0;
 }

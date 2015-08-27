@@ -5,6 +5,9 @@
 #include <string>
 #include "task_description.h"
 #include <string.h>
+#include <vector>
+#include "jsmn.h"
+#include <stdio.h>
 
 
 
@@ -52,5 +55,5 @@ private:
 	L4Re::Util::Registry_server<> registryServer;
 	L4reIpcServer ipcServer;
 
-  taskDescription tasks[];
+  std::vector<taskDescription *> tasks;
 };

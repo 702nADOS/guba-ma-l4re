@@ -161,7 +161,6 @@ int main(int argc, char **argv)
 	netmask.addr = 0;
 	pthread_t serverLuaThread = NULL;
 	pthread_t clientThread = NULL;
-  pthread_t monThread = NULL;
 	struct clientThreadArgs clientArgs;
 	struct serverThreadArgs serverArgs;
 	bool enableClient = false;

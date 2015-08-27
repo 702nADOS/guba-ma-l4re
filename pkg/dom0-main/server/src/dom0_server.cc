@@ -16,6 +16,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 
 
@@ -193,6 +194,7 @@ void* dom0Server(void* args)
 
         printf("received JSON %s", space);
 
+        dsServer.parseTaskDescriptions(space);
       }
       else if (message == SEND_BINARIES) {
         // read the number of binaries
