@@ -29,6 +29,9 @@ LOCAL_PKG=../../pkg
 MODULES_LIST=$LOCAL_PKG/conf/modules.list
 MODULE_SEARCH_PATH=$LOCAL_PKG/conf:$LOCAL_PKG/conf/network:../obj/fiasco
 
+sudo ifconfig tap0 down;
+sudo ifconfig tap0 up;
+
 if [ $1 == "a" ]; then
   #QEMU_OPTIONS="-net socket,listen=:8010 -net nic,model=ne2k_pci,macaddr=52:54:00:00:00:01 -nographic -monitor stdio" \
   QEMU_OPTIONS="-net vde,sock=/tmp/switch1" \
