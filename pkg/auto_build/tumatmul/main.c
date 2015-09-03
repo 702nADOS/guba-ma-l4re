@@ -43,7 +43,7 @@ main(void) {
   // Print the matrices
   // not required for our purposes, just here randomly
 
-  printf("Done\n");
+  printf("Aweomely ! Done\n");
 
   /*
   for (c = 0; c < m; c++) {
