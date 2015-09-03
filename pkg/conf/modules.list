@@ -54,11 +54,11 @@ module ned
 module io
 module ankh
 module dom0
-module hello
 module ankh.vbus
 module Aw.lua
 module dom0_server_only.cfg
 module stage2ned.cfg
+module libmon
 
 entry dom0_server_and_client
 roottask moe rom/dom0_server_and_client.cfg
@@ -179,20 +179,17 @@ module l4re
 module ex_isr
 
 entry hello
-roottask moe --init=rom/hello
-module l4re
 module hello
 
 entry hello-cfg
 kernel fiasco -serial_esc
-roottask moe rom/hello.cfg
+roottask moe --admcontrol=1 rom/volo.cfg
 module l4re
 module ned
-module hello.cfg
+module volo.cfg
 module hello
-module test.txt
-module cat
-#module dom0
+module acstand
+module admissioncontrol/standard.json
 
 entry hello-shared
 roottask moe --init=rom/ex_hello_shared

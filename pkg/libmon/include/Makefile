@@ -5,5 +5,7 @@ L4DIR	?= $(PKGDIR)/../../trunk/l4
 # installed in a way that they can be included with
 # #include <l4/pkgname/yourfile.h> later.
 # No need to list them in this Makefile.
+# list requirements of your program here
+REQUIRES_LIBS            = cxx_libc_io cxx_io
 
 include $(L4DIR)/mk/include.mk
