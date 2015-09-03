@@ -28,14 +28,15 @@ bool MonIpcClient::init()
 	return true;
 }
 
-int MonIpcClient::getMonitoring(){
-  int32_t data = 11;
+monitor* MonIpcClient::getMonitoring(){
+  int32_t op;
+  monitor* data = new monitor;
 	L4::Ipc::Iostream monstream(l4_utcb());
 
-	data = l4_error(monstream.call(monIpcServer.cap()));
-	if (data)
+	op = l4_error(monstream.call(monIpcServer.cap()));
+	if (op)
 		return false; // failure
 
-	monstream >> data;
+	monstream >> data->idle_time;
 	return data;
 }

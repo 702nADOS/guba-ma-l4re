@@ -12,6 +12,7 @@
 
 #include <l4/dom0-main/communication_magic_numbers.h>
 #include <l4/dom0-main/ipc_protocol.h>
+
 #include <pthread-l4.h>
 
 #include <map>
@@ -282,19 +283,20 @@ void* monLoop(void* args)
 {
   MonIpcClient& monIpc = *((monThreadArgs*) args)->monIpcClient;
   TcpServerSocket& myServer = *((monThreadArgs*) args)->myServer;
-  int monitoring_data;
+  //int monitoring_data;
+  monitor* monitoring_data;
 
   while(true){
     // if the network disconnects, then stop the thread
     pthread_testcancel();
 
     monitoring_data = monIpc.getMonitoring();
-    printf("%d\n",monitoring_data);
+    printf("%ld\n",monitoring_data->idle_time);
 
     // send monitoring data over the channel
-    NETCHECK_LOOP(myServer.sendInt32_t(monitoring_data));
+    NETCHECK_LOOP(myServer.sendInt32_t(monitoring_data->idle_time));
 
-    l4_sleep(5000);
+    l4_sleep(2000);
   }
 
   return NULL;
