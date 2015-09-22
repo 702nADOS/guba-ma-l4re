@@ -9,6 +9,8 @@
 #define TASK_DESC 0xDE5
 //client wants to send Task Binary
 #define SEND_BINARIES 0xDE5F11E
+//client wants to start tasks in the queue
+#define START 0x514DE5
 //client wants to send a LUA command
 #define LUA 0x10A
 

@@ -8,6 +8,7 @@
 #include <vector>
 #include "jsmn.h"
 #include <stdio.h>
+#include "lua_ipc_client.h"
 
 
 
@@ -49,6 +50,7 @@ public:
 	//If true is returned, it can be safely reused.
 	bool dsInUse();
   void parseTaskDescriptions(char*);
+  void startTasks(LuaIpcClient&);
 
 private:
 	const char* capName;

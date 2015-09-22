@@ -220,8 +220,6 @@ void* dom0Server(void* args)
           name[8]='\0';
           std::string binary_name = name;
 
-          printf("%s : first binary \n", name);
-
           L4::Cap<L4Re::Dataspace>& dss = dsServer.getDataSpaceFor(binary_name);
           if(! dss.is_valid()){
             printf("Dataspace allocation failed\n");
@@ -262,6 +260,9 @@ void* dom0Server(void* args)
 
         }
 
+      } else if (message == START) {
+        printf("Starting tasks\n");
+        dsServer.startTasks(luaIpc);
       }
 
     }

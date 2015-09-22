@@ -3,6 +3,7 @@
 #include <l4/dom0-main/communication_magic_numbers.h>
 #include <l4/dom0-main/ipc_protocol.h>
 #include "jsmn.h"
+#include "lua_ipc_client.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -43,6 +44,19 @@ void L4reSharedDsServer::loop()
 bool L4reSharedDsServer::dsInUse()
 {
   return ipcServer.dsInUse();
+}
+
+void L4reSharedDsServer::startTasks(LuaIpcClient& luaIpc){
+  //for (std::vector<taskDescription*>::iterator it = tasks.begin(); it != tasks.end(); ++it) {
+  taskDescription* td;
+  while(!tasks.empty()){
+    td = tasks.back();
+    std::string lua_start="L4.default_loader:start({caps={l4re_ipc = L4.Env.l4re_ipc}},\"";
+    lua_start = lua_start + std::string(td->binaryName);
+    lua_start = lua_start + std::string(":n\");");
+    luaIpc.executeString(lua_start.c_str());
+    tasks.pop_back();
+ }
 }
 
 void L4reSharedDsServer::parseTaskDescriptions(char *json){
@@ -89,9 +103,7 @@ void L4reSharedDsServer::parseTaskDescriptions(char *json){
     std::cout << (*it)->id;
     std::cout << (*it)->matrixSize;
     std::cout << (*it)->binaryName;
-  }
-
-
+ }
 }
 
 L4::Cap<L4Re::Dataspace>& L4reSharedDsServer::getDataSpaceFor(std::string binary_name){
