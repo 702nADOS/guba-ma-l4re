@@ -1,0 +1,18 @@
+This repository contains
+   - source for fiasco.oc and l4re
+   - custom packages built for l4re
+      - dom0
+      - libmon
+      - libac
+      - moe (custom)
+      - ned (custom)
+      - l4re-kernel (custom)
+   - auto_build tool to build elf binaries and copy them to the _bin folder (path pkg/auto_build)
+   - Shell scripts for setting up and building
+      - build.sh - to build l4re and fiasco , and custom packages
+      - run.sh - to run the l4re 
+      - run_nw.sh - run l4re with network support. initializes with dom0
+      - start_network.sh - set up networking for the toolchain
+
+The files after building l4re and the fiasco kernel have been left out intentionally. They are not suposed to be checked in source control.
+
