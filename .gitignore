@@ -1,2 +1,5 @@
 trunk/obj
 trunk/.svn
+autom4te.cache/
+pc_network_tool
+tms-sim-modified

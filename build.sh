@@ -30,17 +30,17 @@ if [ $1 == "kernel" ]; then
   make BUILDDIR=../../obj/fiasco
   cd ../../obj/fiasco
   make config
-  make
+  make -j10
 
 
 elif [ $1 == "l4re" ]; then
   # build the L4re kernels
   # NOTE: having a file named broken in any package folder will
   # stop that package from being built and not throw errors
-  cd trunk/src/l4
-  make B=../../obj/l4/x86
-  make O=../../obj/l4/x86 config
-  make O=../../obj/l4/x86
+  cd trunk/l4
+  make B=../obj/l4/x86
+  make O=../obj/l4/x86 config
+  make -j10 O=../obj/l4/x86
 
 
 elif [ $1 == "mod" ]; then

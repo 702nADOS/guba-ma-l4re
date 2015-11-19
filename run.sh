@@ -9,11 +9,12 @@
 #the current working directory
 WD=`pwd`
 
-cd trunk/obj/l4/x86
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR/trunk/obj/l4/x86
 
-LOCAL_PKG=$WD/pkg
+LOCAL_PKG=$SCRIPT_DIR/pkg
 MODULES_LIST=$LOCAL_PKG/conf/modules.list
-MODULE_SEARCH_PATH=$LOCAL_PKG/conf:$LOCAL_PKG/conf/network:$WD/trunk/obj/fiasco
+MODULE_SEARCH_PATH=$LOCAL_PKG/conf:$LOCAL_PKG/conf/network:$SCRIPT_DIR/trunk/obj/fiasco
 E="E=acstand"
 MAKE_CMD="qemu"
 

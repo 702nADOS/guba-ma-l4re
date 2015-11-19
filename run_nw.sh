@@ -22,12 +22,12 @@ if [ -z "$1" ]; then
   print_help_and_exit
 fi
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR/trunk/obj/l4/x86
 
-cd trunk/obj/l4/x86
-
-LOCAL_PKG=../../pkg
+LOCAL_PKG=$SCRIPT_DIR/pkg
 MODULES_LIST=$LOCAL_PKG/conf/modules.list
-MODULE_SEARCH_PATH=$LOCAL_PKG/conf:$LOCAL_PKG/conf/network:../obj/fiasco
+MODULE_SEARCH_PATH=$LOCAL_PKG/conf:$LOCAL_PKG/conf/network:$SCRIPT_DIR/trunk/obj/fiasco
 
 sudo ifconfig tap0 down;
 sudo ifconfig tap0 up;
