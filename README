@@ -8,7 +8,10 @@ This repository contains
       - ned (custom)
       - l4re-kernel (custom)
    - auto_build tool to build elf binaries and copy them to the _bin folder (path pkg/auto_build)
+   - pc_network_tool for network communication with dom0
+   - a modified tms-sim for task description generation including matrix multiplication
    - Shell scripts for setting up and building
+      - build_all.sh to build pc_network_tool, tms-sim, and l4re and fiasco
       - build.sh - to build l4re and fiasco , and custom packages
       - run.sh - to run the l4re 
       - run_nw.sh - run l4re with network support. initializes with dom0
@@ -16,3 +19,4 @@ This repository contains
 
 The files after building l4re and the fiasco kernel have been left out intentionally. They are not suposed to be checked in source control.
 
+Packages required are: libncurses5-dev make gawk g++ binutils pkg-config g++-multilib subversion qemu cmake libxml2-dev nodejs-legacy

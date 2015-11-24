@@ -56,3 +56,11 @@ pc_network_tool
 ! $ sudo apt-get install nodejs-legacy
 ? Error: Cannot find module 'node-sleep'
 ! add "node-sleep": "*" to package.json
+
+
+================
+run it
+================
+- sudo apt-get install libncurses5-dev make gawk g++ binutils pkg-config g++-multilib subversion qemu cmake libxml2-dev nodejs-legacy
+- run build_all.sh, get some coffee
+- adjust and run start_network.sh

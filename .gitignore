@@ -3,5 +3,6 @@ trunk/.svn
 autom4te.cache/
 pkg/auto_build/_bin
 tms-sim-2014-12/build/*
+tms-sim-2014-12/tasks.xml
 pc_network_tool/node_modules
 pc_network_tool/_bin
