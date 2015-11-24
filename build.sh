@@ -57,6 +57,8 @@ elif [ $1 == "mod" ]; then
   # we can also provide a package name via the command line
   # to build only on particular package
   if [ -z $2 ]; then
+    #kundaliya changes
+    make O=../../trunk/obj/l4/x86 -C libmon
     #stark changes
     # Mr.Stark had changes in l4sys as well, thus building dom0-main first
     make O=../../trunk/obj/l4/x86 -C dom0-main
@@ -69,8 +71,6 @@ elif [ $1 == "mod" ]; then
     make O=../../trunk/obj/l4/x86 -C libac
     make O=../../trunk/obj/l4/x86 -C moe
     make O=../../trunk/obj/l4/x86 -C l4re_kernel
-    #kundaliya changes
-    make O=../../trunk/obj/l4/x86 -C libmon
   else
     make O=../../trunk/obj/l4/x86 -C $2
   fi

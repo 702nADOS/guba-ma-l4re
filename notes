@@ -30,6 +30,8 @@ MODULE_SEARCH_PATH=$LOCAL_PKG/conf:$LOCAL_PKG/conf/network:$SCRIPT_DIR/trunk/obj
 ? /home/opossum/code/ma/toolchain/pkg/dom0-main/server/src/mon_ipc_client.h:6:31: fatal error: l4/libmon/monitor.h: No such file or directory
  #include <l4/libmon/monitor.h>
 ! just build again. dependencies probably not set properly.
+? Library dependencies missing: libmon in directory '/home/opossum/code/ma/aku_l4re_toolchain/pkg/dom0-main/server/src'; aborting.
+! build libmon before dom0 in build.sh
 ? 'avk' is neither a username nor a numeric uid.
 ! change avk to linux username in start_network.sh
 ? Ned: ERROR: ned.lua:204: could not create process: Invalid argument (: -22)
@@ -62,5 +64,6 @@ pc_network_tool
 run it
 ================
 - sudo apt-get install libncurses5-dev make gawk g++ binutils pkg-config g++-multilib subversion qemu cmake libxml2-dev nodejs-legacy
+- install vde-switch from http://vde.sourceforge.net/
 - run build_all.sh, get some coffee
 - adjust and run start_network.sh
