@@ -21,6 +21,8 @@ if [ -z "$1" ]; then
   print_help_and_exit
 fi
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR
 
 ## Match arguments
 ##
