@@ -1,0 +1,14 @@
+{
+  "name": "network_Tool",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "xml2json": "^0.8.1",
+    "node-sleep": "*"
+  },
+  "devDependencies": {},
+  "author": "Avinash Kundaliya",
+  "license": "TUM-Thesis"
+}

@@ -1,0 +1,15 @@
+# network Tool
+This tool is useful to create a dom0_client that will talk to the dom0 server, send task descriptions and their binaries so that they can be run in the l4 based microkernel.
+
+## File Descriptions
+index.js - main entry to the system, does the bootstrapping
+dom0_client.js - used to create an instance of the dom0_client. Using this object, all client work can be done via functions.
+magic_number.js - communication messages used during the TCP talk.
+tasks.xml - the xml file that the application reads by default
+debug.js - a very simple debugging wrapper around console logging, so that things can be expanded in the future
+
+## TODO:
+- create the tool builder so that we can create elf binaries on the fly
+
+## Sending binaries
+the tasks.xml file has a field called as the pkg - which is eventually the binary that is being sent to the L4 system. The binary is placed in the binaries folder and the naming convention is used as [pkg].elf

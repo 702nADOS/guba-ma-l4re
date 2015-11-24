@@ -1,6 +1,7 @@
 trunk/obj
 trunk/.svn
 autom4te.cache/
-pc_network_tool
 pkg/auto_build/_bin
 tms-sim-2014-12/build/*
+pc_network_tool/node_modules
+pc_network_tool/_bin
