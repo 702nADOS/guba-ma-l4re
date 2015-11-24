@@ -1,0 +1,58 @@
+================
+issues
+================
+? question/issue
+! answer/solution (if known)
+
+----------------
+aku_l4re_toolchain
+----------------
+? vde-switch
+! install http://vde.sourceforge.net/
+? ncurses error on aku_l4re_toolchain/build.sh
+! $ sudo apt-get install libncurses5-dev
+? no directory src/l4
+? run_nw.sh: Cannot open '../../pkg/conf/modules.list': No such file or directory
+! fix paths in build scripts, preferably absolute paths using:
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR/trunk/obj/l4/x86
+LOCAL_PKG=$SCRIPT_DIR/pkg
+MODULES_LIST=$LOCAL_PKG/conf/modules.list
+MODULE_SEARCH_PATH=$LOCAL_PKG/conf:$LOCAL_PKG/conf/network:$SCRIPT_DIR/trunk/obj/fiasco
+? pkg/auto_build/make.sh not executable
+! $ chmod +x make.sh
+? symlinks
+! ln -s dst lnk
+? Could not find 'fiasco' with path...
+? Could not find 'io' with path...
+? Library dependencies missing: lwip libc_be_socket_lwip liblwip_netif_ankh libc_be_file_stdin in directory '/home/opossum/code/ma/aku_l4re_toolchain/pkg/dom0-main/server/src'; aborting.
+! working directory was messed up (bad idea checking out original L4RE into src) => fresh clone BUT need to change paths in build.sh (trunk/l4 instead of trunk/src/l4)
+? /home/opossum/code/ma/toolchain/pkg/dom0-main/server/src/mon_ipc_client.h:6:31: fatal error: l4/libmon/monitor.h: No such file or directory
+ #include <l4/libmon/monitor.h>
+! just build again. dependencies probably not set properly.
+? 'avk' is neither a username nor a numeric uid.
+! change avk to linux username in start_network.sh
+? Ned: ERROR: ned.lua:204: could not create process: Invalid argument (: -22)
+
+
+----------------
+tms-sim-modified
+----------------
+? build tms-sim CMake errors
+! tms-sim-modified is only modified src directory: copy repository into original tms-sim from http://myweb.rz.uni-augsburg.de/~klugeflo/tms-sim/ and rename to src
+? CMake pollutes source
+! cd build && cmake ..
+? binaries end up in src directories
+! add to CMakeLists.txt:
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+
+----------------
+pc_network_tool
+----------------
+? npm errors
+! $ sudo apt-get install nodejs-legacy
+? Error: Cannot find module 'node-sleep'
+! add "node-sleep": "*" to package.json
