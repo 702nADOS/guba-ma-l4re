@@ -37,6 +37,7 @@ MODULE_SEARCH_PATH=$LOCAL_PKG/conf:$LOCAL_PKG/conf/network:$SCRIPT_DIR/trunk/obj
 ? Warning: vlan 0 is not connected to host network
 ! probably: QEMU built without VDE support. see below.
 ? Ned: ERROR: ned.lua:204: could not create process: Invalid argument (: -22)
+! probably outdated build. rebuild ned by resaving a file and running build.sh mod
 
 
 ----------------
@@ -79,6 +80,8 @@ run it
 - sudo apt-get install libncurses5-dev make gawk g++ binutils pkg-config g++-multilib subversion qemu cmake libxml2-dev nodejs-legacy
 - install vde-switch from http://vde.sourceforge.net/
 - run build_all.sh, get some coffee and check for occasional config popups (defaults are fine)
-- adjust and run start_network.sh
+- adjust and run start_network.sh or do manually
+- run run_nw.sh a
+- run node.js in pc_network_tool
 
 - use 'pkill qemu' to kill qemu processes afterwards
