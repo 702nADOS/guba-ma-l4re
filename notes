@@ -34,6 +34,8 @@ MODULE_SEARCH_PATH=$LOCAL_PKG/conf:$LOCAL_PKG/conf/network:$SCRIPT_DIR/trunk/obj
 ! build libmon before dom0 in build.sh
 ? 'avk' is neither a username nor a numeric uid.
 ! change avk to linux username in start_network.sh
+? Warning: vlan 0 is not connected to host network
+! probably: QEMU built without VDE support. see below.
 ? Ned: ERROR: ned.lua:204: could not create process: Invalid argument (: -22)
 
 
@@ -50,6 +52,17 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+----------------
+QEMU with VDE support
+----------------
+- http://wiki.qemu.org/Hosts/Linux
+- configure (default should include VDE support)
+- make
+- symlinks to executables, e.g.:
+find ~/code/ma/qemu/build/vde -iname "qemu-system*" -exec ln -s {} ~/bin \;
+- which qemu-system-x86_64 should point to symlinks above
+
+
 
 ----------------
 pc_network_tool
@@ -65,5 +78,7 @@ run it
 ================
 - sudo apt-get install libncurses5-dev make gawk g++ binutils pkg-config g++-multilib subversion qemu cmake libxml2-dev nodejs-legacy
 - install vde-switch from http://vde.sourceforge.net/
-- run build_all.sh, get some coffee
+- run build_all.sh, get some coffee and check for occasional config popups (defaults are fine)
 - adjust and run start_network.sh
+
+- use 'pkill qemu' to kill qemu processes afterwards
