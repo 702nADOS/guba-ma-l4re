@@ -72,6 +72,11 @@ pc_network_tool
 ! $ sudo apt-get install nodejs-legacy
 ? Error: Cannot find module 'node-sleep'
 ! add "node-sleep": "*" to package.json
+? Written document is invalid
+Error while writing tasks to file: tasks.xml!
+! ignore
+? Error: ENOENT, no such file or directory '_bin/namaste1'
+
 
 
 ================
