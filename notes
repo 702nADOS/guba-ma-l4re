@@ -76,8 +76,9 @@ pc_network_tool
 Error while writing tasks to file: tasks.xml!
 ! ignore
 ? Error: ENOENT, no such file or directory '_bin/namaste1'
-
-
+! fix task names in periodicloadtask.cpp
+? Error: ENOENT, no such file or directory '_bin/undefined'
+! pc_network_tool can't read single-task tasks.xml (array expected)
 
 ================
 run it
